@@ -2,21 +2,13 @@ package com.csis.lab04; //package we're in
 
 
 //android imports
-import android.content.Context;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 //PURE DATA IMPORTS
@@ -35,7 +27,7 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private PdUiDispatcher dispatcher; //must declare this to use later, used to receive data from sendEvents
-
+    TextView myCounter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);//Mandatory
@@ -43,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         Switch onOffSwitch = (Switch) findViewById(R.id.onOffSwitch);//declared the switch here pointing to id onOffSwitch
+        myCounter = (TextView) findViewById(R.id.sendFrequency);
 
         //Check to see if switch1 value changes
         onOffSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -100,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
             File pdPatch = new File(dir, patchName); //Create file pointer to patch
             PdBase.openPatch(pdPatch.getAbsolutePath()); //open patch
         }catch (IOException e)
+
         {
 
         }
@@ -114,6 +108,44 @@ public class MainActivity extends AppCompatActivity {
         dispatcher = new PdUiDispatcher(); //create UI dispatcher
         PdBase.setReceiver(dispatcher); //set dispatcher to receive items from puredata patches
 
+        dispatcher.addListener("sendCounter",receiver1);
+        PdBase.subscribe("sendCounter");
+
+        dispatcher.addListener("sendFrequency",receiver1);
+        PdBase.subscribe("sendFrequency");
+
     }
+    private PdReceiver receiver1 = new PdReceiver() { private void pdPost(final String msg)
+    { Log.e("RECEIVED:", msg); new Handler().post(new Runnable() { @Override public void run() {
+
+      }
+     });
+    }
+        @Override public void print(String s)
+    { Log.i("PRINT",s); Toast.makeText(getBaseContext(),s,Toast.LENGTH_LONG);
+       }@Override public void receiveBang(String source)
+    { pdPost("bang");
+       } @Override public void receiveFloat(String source, float x) {
+        pdPost("float: " + x);
+            if(source.equals("sendCounter"))
+            {
+                myCounter.setText(String.valueOf(x));
+        }
+            if(source.equals("sendFrequency"))
+
+            {
+                myCounter.setText(String.valueOf(x));
+//Functionality goes here.
+
+            }
+    }
+        @Override public void receiveList(String source, Object... args) {
+            pdPost("list: " + Arrays.toString(args));
+        }
+        @Override public void receiveMessage(String source, String symbol, Object... args) {
+            pdPost("message: " + Arrays.toString(args));
+
+    }
+        @Override public void receiveSymbol(String source, String symbol) { pdPost("symbol: " + symbol); } };
 
 }

@@ -11,22 +11,39 @@
     tools:context="com.csis.lab04.MainActivity">
 
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="COUNTER VALUE"
-        android:id="@+id/counter"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
-
     <Switch
         android:text="On/Off"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="78dp"
+        android:id="@+id/onOffSwitch"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/counter"
-        android:layout_marginTop="80dp"
-        android:id="@+id/onOffSwitch" />
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sendCounter"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="127dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sendFrequency"
+        android:layout_above="@+id/sendCounter"
+        android:layout_alignStart="@+id/sendCounter"
+        android:layout_marginBottom="28dp" />
+
+    <TextView
+        android:text="Frequency Value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sendFrequency"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/onOffSwitch" />
 
 </RelativeLayout>
